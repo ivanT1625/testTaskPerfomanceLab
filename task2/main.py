@@ -1,38 +1,31 @@
 import math
 import sys
 
-# Функция для вычисления положения точки относительно окружности
-def calculate_position(center_x, center_y, radius, x, y):
-    # Рассчитываем расстояние от точки (x, y) до центра окружности (center_x, center_y)
-    distance = math.sqrt((x - center_x) ** 2 + (y - center_y) ** 2)
+def check_position(circle, points):
+    cx, cy, r = circle
+    results = []
+    for x,y in points:
+        squared_distance = (x - cx) ** 2 + (y - cy) ** 2
+        if squared_distance == r ** 2:
+            results.append(0)
+        elif squared_distance < r ** 2:
+            results.append(1)
+        else:
+            results.append(2)
     
-    # Сравниваем расстояние с радиусом
-    if distance == radius:
-        return 0  # Точка лежит на окружности
-    elif distance < radius:
-        return 1  # Точка внутри окружности
-    else:
-        return 2  # Точка снаружи окружности
+    return results
 
-# Главная программа
-def main():
-    # Получаем пути к файлам из аргументов командной строки
+if __name__ == "__main__":
     circle_file = sys.argv[1]
-    points_file = sys.argv[2]
-    
-    # Чтение данных из файла с окружностью
-    with open(circle_file, 'r') as f:
-        center_x, center_y = map(float, f.readline().split())
-        radius = float(f.readline().strip())
-    
-    # Чтение данных из файла с точками
-    with open(points_file, 'r') as f:
-        for line in f:
-            x, y = map(float, line.split())
-            # Вычисление положения точки относительно окружности
-            position = calculate_position(center_x, center_y, radius, x, y)
-            print(position)
+    with open(circle_file, 'r') as file:
+        cx, cy = map(float, file.readline().strip().split())
+        r = float(file.readline().strip())
 
-# Запуск программы
-if __name__ == '__main__':
-    main()
+    points_file = sys.argv[2]
+    with open(points_file, 'r') as file:
+        points = [tuple(map(float, line.strip().split())) for line in file]
+
+    results = check_position((cx, cy, r), points)
+
+    for result in results:
+        print(result)

@@ -1,17 +1,29 @@
-def find_path(n, m):   
-    yield 1
-    for i in range(m-1, n*m, m-1):
-        v = i % n + 1
-        if v == 1: return
-        yield v
+import sys
 
-# Ввод данных от пользователя
-n = int(input("Введите значение n (размер массива): "))
-m = int(input("Введите значение m (интервал движения): "))
 
-# Вычисление пути
-path = find_path(n, m)
+def get_path(n, m):   
+    array_circular = list(range(1, n + 1))
 
-# Вывод результата
-print("Путь:", "".join(map(str, path)))
+    current_index = 0
+    path = []
+
+    while True:
+        path.append(array_circular[current_index])
+        next_index = (current_index + m - 1) % n
+
+        if next_index == 0:
+            break
+
+        current_index = next_index
+
+    return path
+
+if __name__ == "__main__":
+    
+    n = int(sys.argv[1])
+    m = int(sys.argv[2])
+
+
+    path = get_path(n,m)
+    print(''.join(map(str,path)))
 
